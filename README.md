@@ -1,4 +1,3 @@
-# reserva_hotel
 # Sistema de reservas de hotel
 
 Este trabajo consiste en diseñar e implementar una base de datos para gestionar las reservas de un hotel. El sistema organiza la información necesaria para administrar huéspedes, habitaciones, reservas y los datos relacionados con la estadía.
