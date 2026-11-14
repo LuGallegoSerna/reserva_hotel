@@ -1,8 +1,6 @@
--- 1. Crear y usar la base de datos
 CREATE DATABASE IF NOT EXISTS hotel_reservas;
 USE hotel_reservas;
 
--- 2. Tablas maestras o de catálogo (sin claves foráneas)
 CREATE TABLE nacionalidad (
     id_nacionalidad INT AUTO_INCREMENT PRIMARY KEY,
     codigo_iso VARCHAR(5) UNIQUE NOT NULL,
@@ -22,7 +20,6 @@ CREATE TABLE metodo_pago (
     nombre_metodo VARCHAR(50) UNIQUE NOT NULL
 );
 
--- 3. Tablas intermedias (con claves foráneas hacia los catálogos)
 CREATE TABLE cliente (
     id_cliente INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -42,7 +39,6 @@ CREATE TABLE habitacion (
     FOREIGN KEY (id_tipo_habitacion) REFERENCES tipo_habitacion(id_tipo_habitacion) ON DELETE RESTRICT
 );
 
--- 4. Tablas transaccionales principales
 CREATE TABLE reserva (
     id_reserva INT AUTO_INCREMENT PRIMARY KEY,
     id_cliente INT NOT NULL,
@@ -63,4 +59,4 @@ CREATE TABLE pago (
     CHECK (monto > 0),
     FOREIGN KEY (id_reserva) REFERENCES reserva(id_reserva) ON DELETE CASCADE,
     FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago) ON DELETE RESTRICT
-);cliente
+);
