@@ -277,3 +277,18 @@ VALUES (@ultima_reserva, CURDATE(), 250.00, 2);
 
 -- 4. Si todo es correcto, se confirman los cambios definitivamente
 COMMIT;
+
+-- CONSULTAS NL2SQL (Generadas por IA)
+
+SELECT COUNT(*) FROM habitacion WHERE estado = 'mantenimiento';
+
+SELECT DISTINCT c.correo 
+FROM cliente c 
+JOIN reserva r ON c.id_cliente = r.id_cliente 
+JOIN pago p ON r.id_reserva = p.id_reserva 
+JOIN metodo_pago mp ON p.id_metodo_pago = mp.id_metodo_pago 
+WHERE mp.nombre_metodo = 'Efectivo';
+
+SELECT c.nombre
+FROM cliente c JOIN nacionalidad n ON c.id_nacionalidad = n.id_nacionalidad
+WHERE n.nombre_pais = 'México';
