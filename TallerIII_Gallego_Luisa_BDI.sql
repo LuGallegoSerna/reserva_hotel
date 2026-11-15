@@ -82,3 +82,45 @@ WHERE id_reserva = 5
 
 DELETE FROM pago
 WHERE id_pago = 32;
+
+SELECT * 
+FROM habitacion 
+WHERE estado = 'disponible';
+
+SELECT * 
+FROM reserva 
+WHERE CURDATE() BETWEEN fecha_entrada AND fecha_salida;
+
+INSERT INTO reserva (id_cliente, id_habitacion, fecha_entrada, fecha_salida) 
+VALUES (20, 5, '2026-11-10', '2026-11-20');
+
+SELECT id_reserva, id_cliente, fecha_entrada, fecha_salida, 
+       DATEDIFF(fecha_salida, fecha_entrada) AS noches_totales
+FROM reserva 
+WHERE DATEDIFF(fecha_salida, fecha_entrada) > 3;
+
+SELECT DISTINCT c.nombre, c.correo, c.telefono, th.nombre_tipo
+FROM cliente c
+JOIN reserva r ON c.id_cliente = r.id_cliente
+JOIN habitacion h ON r.id_habitacion = h.id_habitacion
+JOIN tipo_habitacion th ON h.id_tipo_habitacion = th.id_tipo_habitacion
+WHERE th.nombre_tipo = 'Suite';
+
+SELECT DISTINCT
+    c.id_cliente,
+    c.nombre,
+    n.nombre_pais AS nacionalidad
+FROM cliente AS c
+JOIN nacionalidad AS n
+    ON c.id_nacionalidad = n.id_nacionalidad
+JOIN reserva AS r
+    ON c.id_cliente = r.id_cliente;
+  
+SELECT DISTINCT c.nombre, n.nombre_pais
+FROM cliente c
+JOIN nacionalidad n ON c.id_nacionalidad = n.id_nacionalidad
+JOIN reserva r ON c.id_cliente = r.id_cliente
+WHERE n.nombre_pais = 'Argentina';
+
+
+    
