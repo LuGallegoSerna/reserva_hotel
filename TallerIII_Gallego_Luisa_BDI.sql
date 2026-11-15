@@ -199,3 +199,51 @@ FROM cliente c
 JOIN reserva r ON c.id_cliente = r.id_cliente 
 GROUP BY c.id_cliente, c.nombre 
 HAVING COUNT(DISTINCT r.id_habitacion) > 1;
+
+INSERT INTO habitacion (numero, id_tipo_habitacion, precio_noche, estado) VALUES ('999', 1, 100.00, 'disponible');
+INSERT INTO reserva (id_cliente, id_habitacion, fecha_entrada, fecha_salida) VALUES (1, 1, '2026-12-24', '2026-12-25');
+
+SELECT h.numero, th.nombre_tipo, h.precio_noche 
+FROM habitacion h
+JOIN tipo_habitacion th ON h.id_tipo_habitacion = th.id_tipo_habitacion
+WHERE h.precio_noche > (
+    SELECT AVG(precio_noche) 
+    FROM habitacion
+);
+
+SELECT c.nombre, 
+       (DATEDIFF(r.fecha_salida, r.fecha_entrada) * h.precio_noche) AS costo_total
+FROM cliente c
+JOIN reserva r ON c.id_cliente = r.id_cliente
+JOIN habitacion h ON r.id_habitacion = h.id_habitacion
+WHERE (DATEDIFF(r.fecha_salida, r.fecha_entrada) * h.precio_noche) = (
+    SELECT MAX(DATEDIFF(r2.fecha_salida, r2.fecha_entrada) * h2.precio_noche)
+    FROM reserva r2
+    JOIN habitacion h2 ON r2.id_habitacion = h2.id_habitacion
+);
+
+SELECT h.numero, th.nombre_tipo, h.estado 
+FROM habitacion h
+JOIN tipo_habitacion th ON h.id_tipo_habitacion = th.id_tipo_habitacion
+WHERE h.id_habitacion NOT IN (
+    SELECT id_habitacion 
+    FROM reserva
+);
+
+SELECT id_reserva, fecha_entrada, fecha_salida 
+FROM reserva 
+WHERE id_reserva NOT IN (
+    SELECT id_reserva 
+    FROM pago
+);
+
+SELECT c.nombre, h.numero, h.precio_noche
+FROM cliente c
+JOIN reserva r ON c.id_cliente = r.id_cliente
+JOIN habitacion h ON r.id_habitacion = h.id_habitacion
+WHERE h.precio_noche = (
+    SELECT MAX(h2.precio_noche)
+    FROM reserva r2
+    JOIN habitacion h2 ON r2.id_habitacion = h2.id_habitacion
+    WHERE r2.id_cliente = c.id_cliente
+);
