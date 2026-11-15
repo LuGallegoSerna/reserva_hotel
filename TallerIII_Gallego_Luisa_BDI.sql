@@ -247,3 +247,33 @@ WHERE h.precio_noche = (
     JOIN habitacion h2 ON r2.id_habitacion = h2.id_habitacion
     WHERE r2.id_cliente = c.id_cliente
 );
+
+CREATE VIEW vista_reservas_activas AS
+SELECT r.id_reserva, c.nombre AS huesped, h.numero AS habitacion, th.nombre_tipo AS tipo, r.fecha_entrada, r.fecha_salida
+FROM reserva r
+JOIN cliente c ON r.id_cliente = c.id_cliente
+JOIN habitacion h ON r.id_habitacion = h.id_habitacion
+JOIN tipo_habitacion th ON h.id_tipo_habitacion = th.id_tipo_habitacion
+WHERE CURDATE() BETWEEN r.fecha_entrada AND r.fecha_salida;
+
+CREATE VIEW vista_ingresos_mensuales AS
+SELECT DATE_FORMAT(fecha_pago, '%Y-%m') AS periodo_mes, SUM(monto) AS total_recaudado
+FROM pago
+GROUP BY DATE_FORMAT(fecha_pago, '%Y-%m')
+ORDER BY periodo_mes;
+
+START TRANSACTION;
+
+-- nueva reserva
+INSERT INTO reserva (id_cliente, id_habitacion, fecha_entrada, fecha_salida) 
+VALUES (1, 2, '2026-12-28', '2026-12-31');
+
+-- 2. Se captura el ID
+SET @ultima_reserva = LAST_INSERT_ID();
+
+-- 3. Se asocia el pago a ese mismo ID
+INSERT INTO pago (id_reserva, fecha_pago, monto, id_metodo_pago) 
+VALUES (@ultima_reserva, CURDATE(), 250.00, 2);
+
+-- 4. Si todo es correcto, se confirman los cambios definitivamente
+COMMIT;
