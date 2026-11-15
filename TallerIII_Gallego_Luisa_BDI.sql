@@ -60,3 +60,18 @@ CREATE TABLE pago (
     FOREIGN KEY (id_reserva) REFERENCES reserva(id_reserva) ON DELETE CASCADE,
     FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago) ON DELETE RESTRICT
 );
+
+UPDATE habitacion 
+SET estado = 'mantenimiento' 
+WHERE numero = '103';
+
+INSERT INTO pago (id_reserva, fecha_pago, monto, id_metodo_pago) 
+VALUES (5, CURDATE(), 100.00, 1);
+
+INSERT INTO pago (id_reserva, fecha_pago, monto, id_metodo_pago) 
+VALUES (5, CURDATE(), 100.000, 1);
+
+DELETE FROM reserva 
+WHERE id_reserva = 30;
+
+
